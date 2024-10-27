@@ -4,6 +4,11 @@ import time
 import requests
 import os
 
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
 # Twitter API credentials (replace with your keys and tokens)
 API_KEY = os.getenv('TWITTER_API_KEY')
 API_SECRET = os.getenv('TWITTER_API_SECRET')
