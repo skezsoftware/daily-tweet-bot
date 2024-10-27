@@ -147,6 +147,11 @@ def post_tweet_v2():
     selected_index = random.choice(unposted_indexes)
     message = messages[selected_index]
 
+    print("Attempting to post a tweet...")
+    print(f"Selected message: {message}")
+    print(f"API Key: {API_KEY}")
+    print(f"Access Token: {ACCESS_TOKEN}")
+
     try:
         # Post the tweet
         client.create_tweet(text=message)
@@ -157,7 +162,7 @@ def post_tweet_v2():
         post_count += 1
 
     except Exception as e:
-        print("An error occurred:", e)
+        print("An error occurred while posting the tweet:", e)
 
 # Schedule the tweet to post every day at 9:00 AM
 schedule.every().day.at("11:00").do(post_tweet_v2)
