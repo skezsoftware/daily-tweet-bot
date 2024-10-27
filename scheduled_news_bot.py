@@ -32,7 +32,7 @@ NEWS_API_URL = 'https://newsapi.org/v2/everything'
 # Function to fetch a coding-related article
 def fetch_article():
     params = {
-        'q': 'coding OR technology OR programming',  # Keywords for tech-related articles
+        'q': 'coding OR programming OR software development OR programming languages',  # Keywords for tech-related articles
         'language': 'en',
         'sortBy': 'publishedAt',
         'apiKey': NEWS_API_KEY
