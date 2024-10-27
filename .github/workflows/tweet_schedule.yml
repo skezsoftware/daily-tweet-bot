@@ -51,7 +51,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Coding Tip Tweet Script
-        if: github.event.schedule == '0 19 * * *'  # Runs only at 11:00 AM PT
+        if: true
         env:
           TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
           TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
