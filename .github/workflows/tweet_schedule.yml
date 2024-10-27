@@ -24,7 +24,6 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run News Tweet Script
-        if: true
         env:
           TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
           TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
@@ -51,7 +50,6 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Coding Tip Tweet Script
-        if: true
         env:
           TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
           TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}

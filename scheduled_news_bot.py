@@ -67,10 +67,10 @@ def post_article_tweet():
         except Exception as e:
             print("An error occurred while posting the tweet:", e)
 
-# Schedule the article tweet at 9:00 AM each day
+# Schedule the article tweet at 9:00 AM PST
 schedule.every().day.at("09:00").do(post_article_tweet)
 
-# Run once for testing instead of an infinite loop
-post_article_tweet()  # Call the function once for testing
-# Use schedule.run_pending() only if you want to test scheduling
-
+# Keep the script running to check the schedule
+while True:
+    schedule.run_pending()
+    time.sleep(60)  # Check every minute for scheduled tasks
