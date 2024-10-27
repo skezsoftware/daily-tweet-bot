@@ -65,8 +65,7 @@ def post_article_tweet():
 # Schedule the article tweet at 9:00 AM each day
 schedule.every().day.at("09:00").do(post_article_tweet)
 
-# Run the scheduler to keep the script running
-while True:
-    schedule.run_pending()
-    time.sleep(60)
+# Run once for testing instead of an infinite loop
+post_article_tweet()  # Call the function once for testing
+# Use schedule.run_pending() only if you want to test scheduling
 

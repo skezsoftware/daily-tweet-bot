@@ -167,7 +167,7 @@ def post_tweet_v2():
 # Schedule the tweet to post every day at 9:00 AM
 schedule.every().day.at("11:00").do(post_tweet_v2)
 
-# Keep the script running to check the schedule
-while True:
-    schedule.run_pending()
-    time.sleep(60)  # Check every minute for scheduled tasks
+# Run once for testing instead of an infinite loop
+post_tweet_v2()  # Call the function once for testing
+# Use schedule.run_pending() only if you want to test scheduling
+
