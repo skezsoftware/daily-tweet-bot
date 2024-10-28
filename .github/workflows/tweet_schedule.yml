@@ -2,8 +2,8 @@ name: Daily Tweets
 
 on:
   schedule:
-    - cron: "18 21 * * *" # Runs at 2:18 PM PDT (9:18 PM UTC) daily for news tweet
-    - cron: "19 21 * * *" # Runs at 2:18 PM PDT (9:19 PM UTC) daily for coding tip tweet
+    - cron: '0 15 * * *'    # Runs at 8:00 AM PDT (3:00 PM UTC) daily for news tweet
+    - cron: '0 18 * * *'    # Runs at 11:00 AM PDT (6:00 PM UTC) daily for coding tip tweet
   workflow_dispatch: # Allows you to manually trigger the workflow
 
 jobs:
