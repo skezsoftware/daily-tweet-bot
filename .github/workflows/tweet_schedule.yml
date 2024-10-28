@@ -4,7 +4,7 @@ on:
   schedule:
       post_news:
       - cron: '*/5 * * * *'    # Runs at 10:05 AM PDT (5:05 PM UTC) daily
-    post_tip:
+      post_tip:
       - cron: '*/10 * * * *'    # Runs at 10:06 AM PDT (5:06 PM UTC) daily
   workflow_dispatch:       # Allows you to manually trigger the workflow
 
