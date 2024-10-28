@@ -71,7 +71,7 @@ def post_article_tweet():
 schedule.every().day.at("09:00").do(post_article_tweet)
 
 # Keep the script running to check the schedule
-while True:
-    schedule.run_pending()
-    time.sleep(60)  
-# post_article_tweet()
+# while True:
+#     schedule.run_pending()
+#     time.sleep(60)  
+post_article_tweet()
