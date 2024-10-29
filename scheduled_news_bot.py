@@ -42,11 +42,22 @@ def fetch_article():
         if response.status_code == 200:
             articles = response.json().get('articles')
             if articles:
-                # Get the latest article
-                article = articles[0]
-                title = article['title']
-                url = article['url']
-                return f"{title} - Read more: {url}"
+                # Try each article until we find one with a working link
+                for article in articles:
+                    title = article['title']
+                    url = article['url']
+                    
+                    # Verify the article URL is accessible
+                    try:
+                        url_check = requests.get(url, timeout=5)
+                        if url_check.status_code == 200:
+                            return f"{title} - Read more: {url}"
+                    except requests.RequestException:
+                        print(f"Skipping article with broken link: {url}")
+                        continue
+                
+                print("No articles with working links found.")
+                return None
             else:
                 print("No articles found.")
                 return None
