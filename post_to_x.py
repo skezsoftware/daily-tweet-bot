@@ -1,12 +1,10 @@
 import tweepy
-import schedule
-import time
 import random
 import os
-
+from datetime import datetime
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
+# Load environment variables
 load_dotenv()
 
 # Twitter API credentials
@@ -16,7 +14,7 @@ ACCESS_TOKEN = os.getenv('TWITTER_ACCESS_TOKEN')
 ACCESS_TOKEN_SECRET = os.getenv('TWITTER_ACCESS_TOKEN_SECRET')
 BEARER_TOKEN = os.getenv('TWITTER_BEARER_TOKEN')
 
-# Authenticate using API v2
+# Initialize Twitter client
 client = tweepy.Client(
     bearer_token=BEARER_TOKEN,
     consumer_key=API_KEY,
@@ -25,7 +23,7 @@ client = tweepy.Client(
     access_token_secret=ACCESS_TOKEN_SECRET
 )
 
-# List of inspirational messages
+# Your existing messages list
 messages = [
     "Use semantic HTML tags like <header>, <footer>, and <article> to improve your site’s accessibility and SEO. It tells both browsers and screen readers what each section of your content is for 🌐",
     "Don't forget the alt attribute for images! It’s essential for accessibility and helps with SEO when images don’t load properly 📸",
@@ -130,46 +128,84 @@ messages = [
     ]
 
 # Track posted messages
-posted_tracker = [False] * len(messages)  # False means not posted, True means posted
-post_count = 0  # Count of total messages posted
+posted_tracker = [False] * len(messages)
+post_count = 0
 
-# Function to post a tweet using API v2
+# Add hashtag categories
+hashtag_categories = {
+    'html': '#WebDev #HTML #FrontEnd #CodingTips',
+    'css': '#CSS #WebDesign #FrontEnd #UIDesign',
+    'javascript': '#JavaScript #WebDev #Programming #CodeTips',
+    'python': '#Python #Programming #CodingTips #PythonProgramming',
+    'react': '#ReactJS #JavaScript #WebDev #FrontEnd',
+    'material-ui': '#MaterialUI #ReactJS #UIDesign #FrontEnd',
+    'bootstrap': '#Bootstrap #WebDesign #FrontEnd #CSS',
+    'general': '#Programming #CodingTips #DevLife #CodeNewbie',
+    'accessibility': '#a11y #WebAccessibility #Inclusion',
+    'performance': '#WebPerformance #Optimization #DevTips'
+}
+
+def get_relevant_hashtags(message):
+    """Determine relevant hashtags based on message content."""
+    hashtags = []
+    
+    # Check message content for keywords and add relevant hashtags
+    message_lower = message.lower()
+    if any(term in message_lower for term in ['html', '<header>', '<footer>', '<article>', '<div>', '<section>']):
+        hashtags.append(hashtag_categories['html'])
+    if any(term in message_lower for term in ['css', 'style', 'flexbox', 'grid']):
+        hashtags.append(hashtag_categories['css'])
+    if any(term in message_lower for term in ['javascript', 'async', 'const', 'let']):
+        hashtags.append(hashtag_categories['javascript'])
+    if any(term in message_lower for term in ['python', 'f-string', 'enumerate']):
+        hashtags.append(hashtag_categories['python'])
+    if any(term in message_lower for term in ['react', 'component', 'useeffect']):
+        hashtags.append(hashtag_categories['react'])
+    if 'material-ui' in message_lower:
+        hashtags.append(hashtag_categories['material-ui'])
+    if 'bootstrap' in message_lower:
+        hashtags.append(hashtag_categories['bootstrap'])
+    if 'accessibility' in message_lower or 'alt attribute' in message_lower:
+        hashtags.append(hashtag_categories['accessibility'])
+    if any(term in message_lower for term in ['performance', 'speed', 'optimize']):
+        hashtags.append(hashtag_categories['performance'])
+    
+    # If no specific category was matched, use general programming hashtags
+    if not hashtags:
+        hashtags.append(hashtag_categories['general'])
+    
+    return ' '.join(hashtags)
+
 def post_tweet_v2():
+    print(f"\n🤖 Tips Bot starting at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     global post_count
-    # Get indexes of messages that haven't been posted yet
+    
     unposted_indexes = [i for i, posted in enumerate(posted_tracker) if not posted]
-
-    # Check if all messages have been posted
+    
     if not unposted_indexes:
-        print("All messages have been posted once. Resetting tracker.")
-        # Reset tracker and count
+        print("📝 All messages have been posted once. Resetting tracker.")
         for i in range(len(posted_tracker)):
             posted_tracker[i] = False
         unposted_indexes = list(range(len(messages)))
         post_count = 0
-
-    # Select a random unposted message
+    
     selected_index = random.choice(unposted_indexes)
     message = messages[selected_index]
-
+    
+    # Add relevant hashtags to the message
+    hashtags = get_relevant_hashtags(message)
+    final_message = f"{message}\n\n{hashtags}"
+    
     try:
-        # Post the tweet
-        client.create_tweet(text=message)
-        print(f"Tweet posted successfully ({post_count + 1}/{len(messages)}): {message}")
-        
-        # Mark the message as posted and increment count
+        client.create_tweet(text=final_message)
+        print(f"✅ Tweet posted successfully ({post_count + 1}/{len(messages)})")
+        print(f"📊 Message index: {selected_index}")
+        print(f"🏷️ Added hashtags: {hashtags}")
         posted_tracker[selected_index] = True
         post_count += 1
-
     except Exception as e:
-        print("An error occurred:", e)
+        print(f"❌ Error posting tweet: {e}")
 
-# Schedule the tweet to post every day at 11:00 AM PST
-schedule.every().day.at("11:00").do(post_tweet_v2)
-
-# Keep the script running to check the schedule
-# while True:
-#     schedule.run_pending()
-#     time.sleep(60)  
-post_tweet_v2()
+if __name__ == "__main__":
+    post_tweet_v2()
 

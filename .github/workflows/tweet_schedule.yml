@@ -2,60 +2,67 @@ name: Daily Tweets
 
 on:
   schedule:
-    - cron: '0 15 * * *'    # Runs at 8:00 AM PDT (3:00 PM UTC) daily for news tweet
-    - cron: '0 18 * * *'    # Runs at 11:00 AM PDT (6:00 PM UTC) daily for coding tip tweet
-  workflow_dispatch: # Allows you to manually trigger the workflow
+    - cron: '0 15 * * *'    # 8:00 AM PDT (3:00 PM UTC) daily for news
+    - cron: '0 18 * * *'    # 11:00 AM PDT (6:00 PM UTC) daily for tips
+  workflow_dispatch:         # Manual trigger
 
 jobs:
   post_news:
     runs-on: ubuntu-latest
     if: github.event.schedule == '0 15 * * *' || github.event_name == 'workflow_dispatch'
     steps:
-      - name: Check out the repository
-        uses: actions/checkout@v2
+      - name: Check out repository
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.9"
+          python-version: "3.11"
+          cache: 'pip'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install tweepy python-dotenv requests
 
-      - name: Run News Tweet Script
+      - name: Run News Bot
         env:
           TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
           TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
           TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
           TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
           TWITTER_BEARER_TOKEN: ${{ secrets.TWITTER_BEARER_TOKEN }}
-          NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
-        run: python scheduled_news_bot.py
+        run: |
+          echo "Starting News Bot workflow..."
+          python scheduled_news_bot.py
+          echo "News Bot workflow completed"
 
   post_tip:
     runs-on: ubuntu-latest
     if: github.event.schedule == '0 18 * * *' || github.event_name == 'workflow_dispatch'
     steps:
-      - name: Check out the repository
-        uses: actions/checkout@v2
+      - name: Check out repository
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.9"
+          python-version: "3.11"
+          cache: 'pip'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install tweepy python-dotenv
 
-      - name: Run Coding Tip Tweet Script
+      - name: Run Tips Bot
         env:
           TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
           TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
           TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
           TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
           TWITTER_BEARER_TOKEN: ${{ secrets.TWITTER_BEARER_TOKEN }}
-        run: python post_to_x.py
+        run: |
+          echo "Starting Tips Bot workflow..."
+          python post_to_x.py
+          echo "Tips Bot workflow completed"
