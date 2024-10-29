@@ -9,6 +9,7 @@ on:
 jobs:
   post_news:
     runs-on: ubuntu-latest
+    if: github.event.schedule == '0 15 * * *' || github.event_name == 'workflow_dispatch'
     steps:
       - name: Check out the repository
         uses: actions/checkout@v2
@@ -35,6 +36,7 @@ jobs:
 
   post_tip:
     runs-on: ubuntu-latest
+    if: github.event.schedule == '0 18 * * *' || github.event_name == 'workflow_dispatch'
     steps:
       - name: Check out the repository
         uses: actions/checkout@v2
