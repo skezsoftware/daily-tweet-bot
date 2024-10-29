@@ -25,24 +25,21 @@ client = tweepy.Client(
     access_token_secret=ACCESS_TOKEN_SECRET
 )
 
-# NewsAPI credentials (replace 'your_news_api_key' with your NewsAPI key)
-NEWS_API_KEY = os.getenv('NEWS_API_KEY')
-NEWS_API_URL = 'https://newsapi.org/v2/everything'
+# Dev.to API credentials (replace 'your_dev_to_api_key' with your Dev.to API key)
+DEV_TO_API_URL = 'https://dev.to/api/articles'
 
 # Function to fetch a coding-related article
 def fetch_article():
     params = {
-        'q': 'coding OR programming OR software development OR programming languages',  # Keywords for tech-related articles
-        'language': 'en',
-        'sortBy': 'publishedAt',
-        'apiKey': NEWS_API_KEY
+        'tag': 'programming',  # You can use tags like: javascript, python, webdev, etc.
+        'per_page': 10,  # Number of articles to fetch
+        'state': 'rising'  # Can be fresh, rising, or all
     }
     try:
-        response = requests.get(NEWS_API_URL, params=params)
+        response = requests.get(DEV_TO_API_URL, params=params)
         if response.status_code == 200:
-            articles = response.json().get('articles')
+            articles = response.json()
             if articles:
-                # Try each article until we find one with a working link
                 for article in articles:
                     title = article['title']
                     url = article['url']
